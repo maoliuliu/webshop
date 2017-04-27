@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<div id="box"></div>
+
+<script>
+
+    //判断闰年
+    function runNian(_year) {
+        if (_year % 400 === 0 || (_year % 4 === 0 && _year % 100 !== 0)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //判断某年某月的1号是星期几
+    function getFirstDay(_year, _month) {
+        var allDay = 0, y = _year - 1, i = 1;
+        allDay = y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) + 1;
+        for (; i < _month; i++) {
+            switch (i) {
+                case 1:
+                    allDay += 31;
+                    break;
+                case 2:
+                    if (runNian(_year)) {
+                        allDay += 29;
+                    }
+                    else {
+                        allDay += 28;
+                    }
+                    break;
+                case 3:
+                    allDay += 31;
+                    break;
+                case 4:
+                    allDay += 30;
+                    break;
+                case 5:
+                    allDay += 31;
+                    break;
+                case 6:
+                    allDay += 30;
+                    break;
+                case 7:
+                    allDay += 31;
+                    break;
+                case 8:
+                    allDay += 31;
+                    break;
+                case 9:
+                    allDay += 30;
+                    break;
+                case 10:
+                    allDay += 31;
+                    break;
+                case 11:
+                    allDay += 30;
+                    break;
+                case 12:
+                    allDay += 31;
+                    break;
+            }
+        }
+        return allDay % 7;
+    }
+
+    //显示日历
+    function calendar(_year, _month) {
+        var firstDay =  getFirstDay(_year, _month);
+        var today = new Date();
+        var _day = today.getDate();
+        var i = 0,
+            monthDay = 0,
+            showStr = "",
+            _classname = "";
+        //月份的天数
+        switch (_month) {
+            case 1:
+                monthDay = 31;
+                break;
+            case 2:
+                if (runNian(_year)) {
+                    monthDay = 29;
+                }
+                else {
+                    monthDay = 28;
+                }
+                break;
+            case 3:
+                monthDay = 31;
+                break;
+            case 4:
+                monthDay = 30;
+                break;
+            case 5:
+                monthDay = 31;
+                break;
+            case 6:
+                monthDay = 30;
+                break;
+            case 7:
+                monthDay = 31;
+                break;
+            case 8:
+                monthDay = 31;
+                break;
+            case 9:
+                monthDay = 30;
+                break;
+            case 10:
+                monthDay = 31;
+                break;
+            case 11:
+                monthDay = 30;
+                break;
+            case 12:
+                monthDay = 31;
+                break;
+        }
+
+        //输出日历表格，这部分因结构而异
+        showStr = "<table class='cld-w'><thead>";
+        //日历头部
+//    showStr += "<tr><th colspan='7'><div class='cld-hd'><span class='cld-pre'>&lt;</span><em id='showDate' value='" + _year + "-" + _month + "-" + _day + "'>" + _year + "年" + _month + "月" + _day + "日" + "</em><span class='cld-next'>&gt;</span></div></th></tr>";
+        //日历星期
+        showStr += "<tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>";
+        showStr += "</thead><tbody><tr>";
+        //当月第一天前的空格
+        for (i = 1; i <= firstDay; i++) {
+            showStr += "<td></td>";
+        }
+        //显示当前月的天数
+        for (i = 1; i <= monthDay; i++) {
+            //当日的日期
+            if (_year === today.getFullYear() && _month === today.getMonth() + 1 && i === today.getDate()) {
+                _classname = "current";
+            }
+            //其他大于当月的月份的相同日期（为了让点击下一月的时候，相同的日期增加cld-cur类）
+            if (_day === i && (_year > today.getFullYear() || _month > today.getMonth() + 1)) {
+                _classname = "cld-cur";
+            }
+            //把日期存在对应的value
+            showStr += "<td class=" + _classname + " value='" + _year + "-" + _month + "-" + i + "'>" + i + "</td>";
+
+            firstDay = (firstDay + 1) % 7;
+            if (firstDay === 0 && i !== monthDay) {
+                showStr += "</tr><tr>";
+            }
+        }
+
+        //剩余的空格
+        if (firstDay !== 0) {
+            for (i = firstDay; i < 7; i++) {
+                showStr += "<td></td>";
+            }
+        }
+
+        showStr += "</tr></tbody></table>";
+        //插入calendar的页面结构里
+        dateDiv.innerHTML = showStr;
+    }
+
+    //显示年月日
+    function showDate(_year, _month, _day) {
+        var date = "", firstDay = getFirstDay(_year, _month, _day);
+        if (_day !== 0) {
+            date = _year + "年" + _month + "月" + _day + "日";
+        }
+        else {
+            date = "No Choose.";
+        }
+        document.getElementById("showDate").innerHTML = date; //日历头部显示
+        calendar(_year, _month);         //调用日历显示函数
+    }
+
+    //初始化
+    var dateDiv = document.createElement('div');
+    dateDiv.setAttribute('id', 'showCld');
+    document.getElementById("box").appendChild(dateDiv); //增加到你的box里
+
+    //显示日历
+    calendar(2017, 4);
+
+
+</script>
+
+</body>
+</html>

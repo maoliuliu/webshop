@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+
+//输出日历表格，这部分因结构而异
+showStr = "<table border='1'><thead>";
+//日历星期
+showStr += "<tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>";
+showStr += "</thead><tbody><tr>";
+    //当月第一天前的空格
+    for (i = 1; i <= firstDay; i++) {
+    showStr += "<td></td>";
+    }
+    //显示当前月的天数
+    for (i = 1; i <= monthDay; i++) {
+    //当日的日期
+    if (_year === today.getFullYear() && _month === today.getMonth() + 1 && i === today.getDate()) {
+    _classname = "current";
+    console.log(i);
+    }
+    else {
+    _classname = "";
+    }
+    //把日期存在对应的value
+    showStr += "<td class=" + _classname + " value='" + _year + "-" + _month + "-" + i + "'>" + i + "</td>";
+
+    firstDay = (firstDay + 1) % 7;
+    if (firstDay === 0 && i !== monthDay) {
+    showStr += "</tr><tr>";
+    }
+    }
+
+    //剩余的空格
+    if (firstDay !== 0) {
+    for (i = firstDay; i < 7; i++) {
+    showStr += "<td></td>";
+    }
+    }
+
+    showStr += "</tr></tbody></table>";
+//插入calendar的页面结构里
+console.log(showStr);
+dateDiv.innerHTML = showStr;
+}
+
+//初始化
+var dateDiv = document.createElement('div');
+dateDiv.setAttribute('id', 'showCld');
+document.getElementById("box").appendChild(dateDiv); //增加到你的box里
+
+//显示日历
+calendar(2017, 4);
+
+
+</script>
 
 </body>
 </html>
