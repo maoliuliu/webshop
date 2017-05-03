@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
+<div id="source1" draggable="true">aa元素</div>
 <div id="source" draggable="true">a元素</div>
 <div id="process">b元素</div>
 <div id="target">c元素</div>
@@ -29,7 +30,16 @@
         console.log('a元素拖放到c元素了');
         ev.preventDefault();
     },false)
-    document.ondragover = function(e){e.preventDefault();}
+    document.ondragover = function(e){e.preventDefault();};
+
+    var source = document.getElementById('source1'),
+        icon = document.createElement('img');
+
+    icon.src = 'xiao.png';
+
+    source.addEventListener('dragstart',function(ev){
+        ev.dataTransfer.setDragImage(icon,-10,-10)
+    },false)
 </script>
 </body>
 </html>
